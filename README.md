@@ -2,7 +2,7 @@
 
 把会话**沉到所在工作区的最底部**——置顶的反向操作。沉底后该会话从分组的正常阅读顺序里折叠出去，需要时才展开回来。
 
-[English](README.md) | 中文
+[English](README.en.md) | 中文
 
 ```
 📁 SOME
@@ -15,13 +15,9 @@
    展开其余 3 个会话                              ← 原生 watermark 行
 ```
 
-<p align="center">
-  <img src="docs/sink-collapsed.png" width="246" alt="SOME 已折叠：展开其余 5 个沉底对话，JobHunting 保持展开">
-  <img src="docs/sink-expanded.png" width="246" alt="两个工作区都展开：收起沉底会话">
-  <img src="docs/sink-per-workspace.png" width="231" alt="SOME 展开，JobHunting 仍保持折叠">
-</p>
-
-<p align="center"><sub>折叠态 · 展开态 · 每个工作区各存各的状态</sub></p>
+| 折叠态 | 展开态 | 每个工作区各存各的状态 |
+| :---: | :---: | :---: |
+| ![](docs/sink-collapsed.png) | ![](docs/sink-expanded.png) | ![](docs/sink-per-workspace.png) |
 
 ## 新增了什么
 
