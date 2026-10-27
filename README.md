@@ -1,126 +1,107 @@
-# dsh-sink-sessions
+# dsh-sink-sessions（沉底会话）
 
-**Sink a conversation to the bottom of its workspace** in the DeepSeek Harness
-sidebar — the opposite of pinning. A sunk conversation folds out of its group's
-normal reading and comes back only when you ask for it.
+把会话**沉到所在工作区的最底部**——置顶的反向操作。沉底后该会话从分组的正常阅读顺序里折叠出去，需要时才展开回来。
 
-English | [中文](README.zh.md)
+[English](README.md) | 中文
 
 ```
 📁 SOME
    大肥鱼                        23 小时   📌
    DeepSeek 用量网页全局…          47 分钟   📌
    重大人生抉择倾诉                2 天     📌
-   本地部署 DeepSeek 模型配置…      4 天     ↓     ← sunk, mark visible
+   本地部署 DeepSeek 模型配置…      4 天     ↓     ← 已沉底，行尾有标记
    形势与政策刷课脚本               7 天     ↓
-   展开其余 2 个沉底对话                          ← this plugin
-   展开其余 3 个会话                              ← native watermark row
+   展开其余 2 个沉底对话                          ← 本插件
+   展开其余 3 个会话                              ← 原生 watermark 行
 ```
 
 <p align="center">
-  <img src="docs/sink-collapsed.png" width="246" alt="SOME folded: 展开其余 5 个沉底对话, JobHunting expanded">
-  <img src="docs/sink-expanded.png" width="246" alt="Both workspaces expanded: 收起沉底会话">
-  <img src="docs/sink-per-workspace.png" width="231" alt="SOME expanded while JobHunting stays folded">
+  <img src="docs/sink-collapsed.png" width="246" alt="SOME 已折叠：展开其余 5 个沉底对话，JobHunting 保持展开">
+  <img src="docs/sink-expanded.png" width="246" alt="两个工作区都展开：收起沉底会话">
+  <img src="docs/sink-per-workspace.png" width="231" alt="SOME 展开，JobHunting 仍保持折叠">
 </p>
 
-<p align="center"><sub>Folded · Expanded · Each workspace keeps its own state</sub></p>
+<p align="center"><sub>折叠态 · 展开态 · 每个工作区各存各的状态</sub></p>
 
-## What it adds
+## 新增了什么
 
-| Surface | Behavior |
+| 位置 | 行为 |
 | --- | --- |
-| Session **"..." menu** | `沉底会话` / `取消沉底`, placed at `order` 150 — directly below the shipped Pin row and above Rename. |
-| **Row mark** | A 14px down-arrow into a tray, after the relative time. Same seat, size and color as the native pin mark, with `aria-label` / tooltip `已沉底`, so a sunk row is recognizable without opening the menu. |
-| **Group reveal row** | `展开其余 N 个沉底对话` directly above the native group control; expands the group's sunk rows in place. It turns into `收起沉底会话` while expanded, so it never reads like the native `收起`. |
-| **Persistence** | Sunk session ids are kept in `localStorage` (`dsh-sink-sessions.v1`), per browser. Reveal state is transient and starts folded, like the native watermark. |
+| 会话 **“...” 菜单** | `沉底会话` / `取消沉底`，`order` 150——正好在原生「置顶会话」下面、「重命名」上面。 |
+| **行尾标记** | 相对时间后面一个 14px 的「向下箭头落进托盘」小图标，座位、尺寸、颜色都和原生小钉子一致，带 `aria-label` / 悬停提示「已沉底」，不打开菜单也能一眼认出。 |
+| **分组展开行** | `展开其余 N 个沉底对话`，固定在原生分组控制行（`展开其余 N 个会话` / `收起`）之上；展开后就地显示该组的沉底行，文案变成 `收起沉底会话`，不会和原生的「收起」重名。 |
+| **持久化** | 沉底集合按浏览器存在 `localStorage`（键 `dsh-sink-sessions.v1`）；展开状态是临时的，刷新后默认折叠（和原生 watermark 一样）。 |
 
-Pin and sink are opposites: pin lifts a row to the front of the group, sink folds
-it to the bottom of the group's reading.
+置顶与沉底互为反向：置顶把行提到分组最前，沉底把行折到分组阅读顺序的最末。
 
-## Requirements
+## 环境要求
 
-- DeepSeek Harness with the Web client: `@deepseek-ai/dsh-client-ui-workspace`
-  and `@deepseek-ai/dsh-client-ui-sidebar` must be present (they are in the
-  standard desktop profile).
-- Developed and verified against **0.2.1-rc.3** (desktop, Windows). The plugin
-  reads the sidebar's rendered list, so a future release that changes that DOM
-  contract can make the hiding stop working — see [Limitations](#limitations).
+- DeepSeek Harness 的 Web 客户端，需存在 `@deepseek-ai/dsh-client-ui-workspace` 与
+  `@deepseek-ai/dsh-client-ui-sidebar`（桌面版标准 profile 自带）。
+- 在 **0.2.1-rc.3**（桌面版 / Windows）上开发与验证。插件读取的是侧边栏已渲染的列表，
+  未来版本若改动该 DOM 契约，隐藏会失效（不会崩溃）——见「限制」。
 
-## Install
+## 安装
 
-From a local checkout:
+本地检出后：
 
 ```bash
 git clone https://github.com/<your-account>/<repo>.git
 dsh plugin install ./<repo>
 ```
 
-Or point the Plugin Manager at this directory (Plugins page → install bundle →
-local directory). Then **reload the page** (`Ctrl+R`): the Client half is loaded
-per page load.
+或用 Plugin Manager 指向本目录（插件页 → 安装 bundle → 本地目录）。装完 **刷新页面**（`Ctrl+R`）：
+Client 半是随页面加载的。
 
-Verify: open any session's `...` menu — `沉底会话` should sit right under
-`置顶会话`.
+验证：任意会话的 `...` 菜单里，`沉底会话` 应该正好在 `置顶会话` 下面。
 
-### Uninstall
+### 卸载
 
 ```bash
 dsh plugin remove dsh-sink-sessions
 ```
 
-or delete the `dsh-sink-sessions` row from the profile's `dsh.profile.bundles`
-and `dependencies`. Sunk ids left in `localStorage` are limited to
-`dsh-sink-sessions.v1` and can be cleared with it.
+或从 profile 的 `dsh.profile.bundles` 与 `dependencies` 里删掉 `dsh-sink-sessions`。
+`localStorage` 里残留的沉底 id 只在 `dsh-sink-sessions.v1` 这一个键下，可一并清除。
 
-## Limitations
+## 限制
 
-This is a **UI-layer extension, not a native list feature**. The native browser
-owns row derivation and the per-workspace watermark; it offers seats for a menu
-row, a hover button, a leading decoration and a hover-card section, but no hook
-that filters or reorders rendered rows. Consequences:
+这是一个**UI 层扩展，不是原生列表功能**。原生浏览器独占行派生与每组 watermark，只开放了
+菜单行、悬停按钮、行首装饰、悬停卡片几个座位，没有「过滤/重排已渲染行」的钩子。因此：
 
-- **The native count still includes sunk rows.** The native `展开其余 N 个会话`
-  counts the watermark's hidden rows, sunk ones included, so its number can be
-  larger than what it reveals. This plugin's own row only counts sunk rows.
-- **Revealed rows are not reordered.** Expanding puts the sunk rows back in their
-  chronological position; they are not moved below the ordinary rows.
-- **It depends on two structure facts:** rows are `[data-row-key="session:<id>"]`,
-  and a group's own session rows are direct children of the element holding its
-  `[data-row-key="workspace:<key>"]`. If a release changes either, the plugin
-  stops hiding rows (it does not crash).
-- **The flat ("one list") view** has no group to fold into, so it gets a single
-  reveal row at the end of the list.
-- **Web client only.** The Client half is declared with `dsh.client.platform: web`.
+- **原生计数仍含沉底行**：原生 `展开其余 N 个会话` 数的是 watermark 隐藏的行，沉底行也算在内，
+  所以它的数字可能大于实际展开出来的行数；插件自己那行只数沉底行。
+- **展开不重排**：沉底行回到原来的时间位置，不会移动到普通行下面。要真正“沉到组尾”需要原生改动。
+- **依赖两个结构事实**：行是 `[data-row-key="session:<id>"]`，且某分组自己的会话行是承载
+  `[data-row-key="workspace:<key>"]` 元素的直接子节点。任一被改动，隐藏会失效（不崩溃）。
+- **扁平（“一条列表”）视图**没有分组可折，只在列表末尾给一行全局展开。
+- **仅 Web 客户端**：Client 半声明为 `dsh.client.platform: web`。
 
-## How it works
+## 实现方式
 
-- The menu row is an ordinary `sidebar.workspaces.session.menu.item`
-  registration, ordered between Pin (100) and Rename (200).
-- A `MutationObserver` keeps the rendered list in sync: sunk rows get inline
-  `display: none` (React never sets `display` on those rows) plus
-  `data-sink-hidden`, and a mark element and a reveal `button` are placed into
-  the group. Both are idempotent, so React re-renders cannot accumulate copies.
-- No network calls, no telemetry, no host-side state. The only stored data is the
-  set of sunk session ids in `localStorage`.
+- 菜单行就是普通的 `sidebar.workspaces.session.menu.item` 注册，排在 Pin（100）与 Rename（200）之间。
+- `MutationObserver` 让渲染出来的列表与状态同步：沉底行加内联 `display: none`（React 不会在这些行上设
+  `display`）和 `data-sink-hidden`，并向分组里放入一个标记元素和一个展开 `button`；两者都做了幂等判断，
+  React 重渲染不会产生重复节点。
+- 无网络请求、无遥测、无 Host 侧状态。唯一存储的是 `localStorage` 里的沉底会话 id 集合。
 
-## Development
+## 开发
 
-Single-file Client half, no build step:
+Client 半是单文件、无构建步骤：
 
 ```
-package.json          bundle manifest (dsh.bundle.patch + dsh.client)
-cordis.patch.yml      inserts the Host row
-index.js              Host half: export function apply() {}
-client.js             whole UI: state, DOM sync, menu row, reveal row, mark
-locale/en.json        Plugin Manager display metadata
+package.json          bundle 清单（dsh.bundle.patch + dsh.client）
+cordis.patch.yml      插入 Host 行
+index.js              Host 半：export function apply() {}
+client.js             全部 UI：状态、DOM 同步、菜单行、展开行、行尾标记
+locale/en.json        Plugin Manager 展示元数据
 locale/zh.json
 icon.svg
 ```
 
-Layout of the bundle follows the Harness plugin contract: the host row mounts the
-package, `dsh.client` serves `client.js` to the browser, and the Client half
-registers into slots through `ctx.slots.inject`.
+目录布局遵循 Harness 插件约定：Host 行挂载包，`dsh.client` 把 `client.js` 送到浏览器，
+Client 半通过 `ctx.slots.inject` 注册进座位。
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT，见 [LICENSE](LICENSE)。
