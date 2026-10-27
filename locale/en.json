@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Sink Sessions",
+    "description": "Sink a conversation to the bottom of its workspace: its row leaves the group until you expand it, the opposite of pinning. One row in each session menu, plus a per-group show/hide row."
+  }
+}

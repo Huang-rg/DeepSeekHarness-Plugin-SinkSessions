@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Sink sessions">
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#1b2b4b"/>
+  <path d="M32 14v21" stroke="#7fb2ff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M32 36 22.5 26.5M32 36l9.5-9.5" stroke="#7fb2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="14" y="43" width="36" height="7" rx="3.5" fill="#3d6fd1"/>
+</svg>

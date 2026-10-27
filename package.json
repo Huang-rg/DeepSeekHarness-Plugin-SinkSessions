@@ -1,0 +1,51 @@
+{
+  "name": "dsh-sink-sessions",
+  "version": "0.2.2",
+  "private": true,
+  "type": "module",
+  "description": "Sink selected sessions to the bottom of their workspace group in the DeepSeek Harness sidebar: a fourth row state beside pin, with a row mark, a per-group reveal row, and a menu action.",
+  "license": "MIT",
+  "author": "dsh-sink-sessions contributors",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "sidebar",
+    "sessions",
+    "pin"
+  ],
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "locale/*.json",
+    "icon.svg",
+    "docs/*.png"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ]
+    }
+  }
+}
